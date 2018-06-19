@@ -1,15 +1,13 @@
 import { Get, Controller, Req, Res, Query } from '@nestjs/common';
 import { google } from 'googleapis';
+import { OAuthOptions } from '../tmp/credentials';
+import { AxiosError } from '@nestjs/common/http/interfaces/axios.interfaces';
 
 @Controller()
 export class AppController {
   private oauth2Client: any;
 
-  private readonly OAuthOptions = {
-    clientId: 'CLIENT_ID_HERE',
-    clientSecret: 'CLIENT_SECRET_HERE',
-    redirectUri: 'CALLBACK_HERE',
-  };
+  private readonly OAuthOptions = OAuthOptions;
 
   constructor() {}
 
@@ -22,6 +20,7 @@ export class AppController {
     );
 
     const scope = [
+      'https://www.googleapis.com/auth/admin.directory.user',
       'https://www.googleapis.com/auth/admin.directory.user.readonly',
     ];
 
@@ -38,13 +37,30 @@ export class AppController {
 
     this.oauth2Client.setCredentials(tokens);
 
-    listUsers(tokens);
+    this.listUsers()
+      .catch((e: AxiosError) => {
+        console.log('ERROR: ', e);
+      })
+      .then(users => {
+        console.log('Users: ', users);
+      });
   }
-}
 
-function listUsers(auth) {
-  const service = google.admin('directory_v1');
+  private listUsers(): Promise<any> {
+    const service = google.admin('directory_v1');
 
-  console.log(auth);
-
+    return new Promise((resolve, reject) => {
+      service.users.list({
+        auth: this.oauth2Client,
+        orderBy: 'email',
+        domain: 'valor-software.com',
+      }, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(response);
+        }
+      });
+    });
+  }
 }
