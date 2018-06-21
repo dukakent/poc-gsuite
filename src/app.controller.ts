@@ -97,7 +97,7 @@ export class AppController {
       <p style="border-bottom: 1px solid #333">
         <div>${item.summary}</div>
         <div>${item.description || ''}</div>
-        <div>${item.start.dateTime}</div>
+        <div>${item.start && item.start.dateTime || ''}</div>
       </p>
     `).join('');
 
