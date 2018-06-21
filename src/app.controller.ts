@@ -1,16 +1,17 @@
 import { Get, Controller, Request, Response, Query, Param } from '@nestjs/common';
 import { admin_directory_v1, calendar_v3, google } from 'googleapis';
-import { OAuthOptions } from '../tmp/credentials';
 import { AxiosError } from '@nestjs/common/http/interfaces/axios.interfaces';
 import Schema$Users = admin_directory_v1.Schema$Users;
 import Schema$Events = calendar_v3.Schema$Events;
 
+require('dotenv').config();
+
 @Controller()
 export class AppController {
   private readonly googleOauth2Client = new google.auth.OAuth2(
-    OAuthOptions.clientId,
-    OAuthOptions.clientSecret,
-    OAuthOptions.redirectUri,
+    process.env.OAUTH_CLIENT_ID,
+    process.env.OAUTH_CLIENT_SECRET,
+    process.env.OAUTH_REDIRECT_URI,
   );
 
   private readonly googleAdminClient = google.admin('directory_v1');
