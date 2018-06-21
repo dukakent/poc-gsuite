@@ -48,15 +48,21 @@ export class AppController {
 
   @Get('/calendar/:email')
   async getCalendar(@Request() req, @Response() res, @Param('email') email) {
-    this.getEvents(email)
+    const events = await this.getEvents(email)
       .catch(e => {
         res.send(`ERROR: ${e.code}`);
 
         throw e;
-      })
-      .then(events => {
-        res.send(this.compileEventsTemplate(email, events.data));
       });
+
+    res.send(this.compileEventsTemplate(email, events.data));
+  }
+
+  @Get('/watchEvents')
+  notify(@Request() req, @Response() res) {
+    console.log('notify success');
+
+    return '';
   }
 
   private getUserList(): Promise<any> {
