@@ -75,7 +75,6 @@ export class AppController {
   private getEvents(email: string): Promise<any> {
     return this.googleCalendarClient.events.list({
       calendarId: email,
-      maxResults: 99,
     });
   }
 
