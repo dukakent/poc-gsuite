@@ -78,6 +78,8 @@ First you need to create credentials so google can know which developer is using
 ## Get all users of an organization
 If you want user of your application to manages other users inside an organization, you should use [Directory API](https://developers.google.com/admin-sdk/directory/).
 
+NOTE: In order to use the Admin SDK, you need to enable it in Developers Console. Go to [Developers Console](https://console.developers.google.com) and search for `Admin SDK` and then enable it
+
 NOTE: You should handle a case in your application when a user, who wants to access a Directory API, doesn't have a permission to get or update other users' data. It means that a user doesn't have admin rights in his organization. In this case a Directory API will return `403 status code`.
 
 You can initialize a Directory API client in your app in this way:
